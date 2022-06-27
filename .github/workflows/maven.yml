@@ -1,63 +1,63 @@
 
-name: Java CI
+name: Java CI #Nome da pipeline 
 
-on: 
-  push:
+on: #Trigger que vai ativar a execução da pipeline quando houver
+  push: 
   pull_request:
 
-jobs:
+jobs: #Serviços a serem executados na pipeline
   build:
-    runs-on: ubuntu-latest
-    name: Java ${{ matrix.java }}
+    runs-on: ubuntu-latest #Tipo de máquina virtual hospedada no GitHub em que será executada a pipeline 
+    name: Java ${{ matrix.java }} #Define uma matriz de diferentes configurações de trabalho, determinando as versões java em que o código será testado
     strategy:
       matrix:
         java: [8,11,17]
 
-    steps:
-      - uses: actions/checkout@v3
+    steps: #Passos da pipeline
+      - uses: actions/checkout@v3 #Pegar os dados do repositório
 
-      - name: Set up JDK ${{ matrix.java }}
+      - name: Set up JDK ${{ matrix.java }} #Setup do java de acordo com a matriz de configurações de trabalho definidas
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'temurin'
+          distribution: 'temurin' #Distribuição pela Eclipse Foundation
 
-      - name: Cache local Maven repository
+      - name: Cache local Maven repository #Armazena dependências do maven em cache para evitar reinstalação destas depêndencias toda vez que a pipeline for executada
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
+          path: ~/.m2/repository #O caminho do executor para armazenar em cache ou restaurar
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }} #Chave criada ao salvar uma cache e a chave usada para pesquisar uma cache
+          restore-keys: | #chaves de restauração alternativas
             ${{ runner.os }}-maven-
 
-      - uses: browser-actions/setup-firefox@latest
-      - uses: browser-actions/setup-chrome@latest
+      - uses: browser-actions/setup-firefox@latest #Baixan e armazena em cache a última versão do Firefox e adiciona ao PATH
+      - uses: browser-actions/setup-chrome@latest #Baixan e armazena em cache a última versão do Chrome e adiciona ao PATH
 
-      - name: Validate with Maven
-        run: ./mvnw -B clean validate
+      - name: Validate with Maven #Executa um ciclo de vida do maven que valida se o projeto está correto e todas as informações necessárias estão disponíveis
+        run: ./mvnw -B clean validate 
 
-      - name: Static validation with Maven
+      - name: Static validation with Maven #executa um ciclo de vida do maven que instala plugins do maven para as versões Java diferentes da 8
         if: ${{ matrix.java != 8 }}
         run: ./mvnw -B -Pcheck-duplicate,check-checkstyle,check-cycles,check-cpd,check-pmd,check-spotbugs,check-dependency -DskipTests=true -Dmaven.compiler.source=${{ matrix.java }} -Dmaven.compiler.target=${{ matrix.java }} install
 
-      - name: Static validation with Maven
+      - name: Static validation with Maven #Executa um ciclo de vida do maven que instala plugins do maven para a versão 8 do Java
         if: ${{ matrix.java == 8 }}
         run: ./mvnw -B -Pcheck-duplicate,check-cycles,check-cpd,check-pmd,check-spotbugs,check-dependency -DskipTests=true install
 
-      - name: Tests with Maven
+      - name: Tests with Maven #Executa quaisquer verificações nos resultados dos testes de integração para garantir que os critérios de qualidade sejam atendidos, usando de uma ação que instala o XVFB (servidor X que pode ser executado em máquinas sem hardware de exibição e sem dispositivos de entrada físicos) que inicia o navegador virtualmente e roda os testes
         uses: GabrielBB/xvfb-action@v1
         with:
           run: ./mvnw -B -DwebDriverType=chrome verify
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v3 #Integra a ferramenta codecov que mede a cobertura de teste do código
         with:
-          fail_ci_if_error: true
+          fail_ci_if_error: true #Se o codecov apresentar erros durante o upload a pipeline falha de CI falha 
 
-      - name: Git branch name
+      - name: Git branch name #Obtém o nome da branch git atual da ação em execução para verificar os triggers de pull_request e push
         id: git-branch-name
         uses: EthanSK/git-branch-name-action@v1
 
-      - name: Sonarqube with Maven
+      - name: Sonarqube with Maven #Integra o maven com o sonarqube e executa o comando de 
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
