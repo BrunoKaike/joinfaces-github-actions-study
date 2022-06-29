@@ -65,6 +65,7 @@ jobs: #Serviços a serem executados na pipeline
         run: ./mvnw -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Pcheck-sonarqube sonar:sonar
   
   deploy:
+      needs: build
       runs-on: ubuntu-latest
 
       steps:
