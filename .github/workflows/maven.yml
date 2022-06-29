@@ -1,5 +1,5 @@
 
-name: Java CI #Nome da pipeline 
+name: Java CI/CD #Nome da pipeline 
 
 on: #Trigger que vai ativar a execução da pipeline quando houver
   push: 
