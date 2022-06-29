@@ -63,4 +63,10 @@ jobs: #Serviços a serem executados na pipeline
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ matrix.java == 11 && github.event_name == 'push' && github.ref_name == '4.7.x' && github.repository_owner == 'joinfaces' }}
         run: ./mvnw -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Pcheck-sonarqube sonar:sonar
-
+        
+      - name: Deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "joinfaces-example-brunokaike"
+          heroku_email: "brunokaike2014@gmail.com"
