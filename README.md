@@ -1,8 +1,7 @@
 JoinFaces Example
 =====
 [![Heroku](https://joinfaces-example-brunokaike.herokuapp.com/starter.jsf)](https://joinfaces-example-brunokaike.herokuapp.com)
-[![Build Status](https://github.com/BrunoKaike/joinfaces-github-actions-study)
-/actions/workflows/maven.yml/badge.svg)](https://github.com/BrunoKaike/joinfaces-github-actions-study/actions)
+[![Build Status](https://github.com/BrunoKaike/joinfaces-github-actions-study/actions/workflows/maven.yml/badge.svg)](https://github.com/BrunoKaike/joinfaces-github-actions-study/actions)
 [![Codecov](https://codecov.io/gh/BrunoKaike/joinfaces-github-actions-study/branch/4.7.x/graph/badge.svg)](https://codecov.io/gh/BrunoKaike/joinfaces-github-actions-study)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BrunoKaike_joinfaces-github-actions-study&metric=bugs)](https://sonarcloud.io/dashboard?id=BrunoKaike_joinfaces-github-actions-study)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
